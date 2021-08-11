@@ -1,0 +1,62 @@
+syntax = "proto3";
+package app_manager;
+
+option java_package = "com.defyun.pb";
+option java_outer_classname = "AppManagerProtocol";
+//import "google/protobuf/timestamp.proto";
+
+service AppManager {
+  rpc ListPackage (PackageInfoReq) returns (PackageInfoList);
+//  rpc AppControl(AppControlReq) returns (AppControlResp);
+}
+
+//direct jni api
+message RequestApi {
+  oneof req {
+    //
+    PackageInfoReq package_info_req = 1;
+  }
+}
+
+
+message PackageInfoReq {
+  bool not_system_app = 1;
+  repeated string selected_package_list = 2;
+  bool quick = 3;//只返回pkg_name和最后修改时间
+}
+
+message PackageInfo {
+  string name = 1;
+  string pkg_name = 2;
+  bytes icon = 3;
+  int32 uid = 4;
+  string processName = 5;
+  int64 firstInstallTime = 6;
+  int64 lastUpdateTime = 7;
+  string sourceDir = 8;
+  string dataDir = 9;
+  int32 minSdkVersion = 10;
+  int32 targetSdkVersion = 11;
+  int32 compileSdkVersion = 12;
+  bool running = 20;
+  bool hiding = 21;
+}
+
+message PackageInfoList {
+  repeated PackageInfo pkg_info_list = 1;
+}
+
+
+//杀死，控制app
+message AppControlReq {
+  string pkg_name = 1;
+  string cmd = 2;
+  string arg = 3;
+}
+
+message AppControlResp {
+  string pkg_name = 1;
+  string status = 2;
+}
+
+

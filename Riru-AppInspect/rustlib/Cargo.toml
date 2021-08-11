@@ -1,0 +1,21 @@
+[package]
+name = "rustlib"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["staticlib"]
+
+[dependencies]
+jni = "0.19"
+log = "0.4"
+log-panics = "2.0"
+ctor = "0.1"
+
+util-rs = { path = "/Users/wuhx/project.d/util-rs" , features = [] }
+anyhow = "1.0"
+
+#[target.'cfg(target_os = "android")'.dependencies]
+android_logger = "0.10"

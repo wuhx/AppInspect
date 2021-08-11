@@ -1,0 +1,7 @@
+*.so
+target/
+build/
+*.a
+*.o
+*.apk
+.cache

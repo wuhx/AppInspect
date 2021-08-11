@@ -1,0 +1,16 @@
+syntax = "proto3";
+package root_manager;
+
+option java_package = "com.defyun.pb";
+option java_outer_classname = "RootManagerProtocol";
+
+service RootManager {
+  rpc RunRootCmd (RunRootCmdReq) returns (RunRootCmdResp);
+}
+
+message RunRootCmdReq {
+  string cmd = 1;
+}
+message RunRootCmdResp {
+  string result = 1;
+}

@@ -1,0 +1,12 @@
+[build]
+#target = "aarch64-linux-android"
+target = "aarch64-apple-darwin"
+
+
+[target.aarch64-linux-android]
+ar = "/Users/wuhx/Library/Android/sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/darwin-x86_64/bin/aarch64-linux-android-ar"
+linker = "/Users/wuhx/Library/Android/sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/darwin-x86_64/bin/aarch64-linux-android30-clang"
+
+[target.armv7-linux-androideabi]
+ar = "/Users/wuhx/Library/Android/sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-ar"
+linker = "/Users/wuhx/Library/Android/sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/darwin-x86_64/bin/armv7a-linux-androideabi30-clang"
