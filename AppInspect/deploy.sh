@@ -1,7 +1,2 @@
-TARGET=/data/data/com.cloudmonad.inspect/site
-flutter build web
-adb push build/web /data/local/tmp/site
+flutter build web 
 
-adb shell su -c rm -fr $TARGET
-adb shell su -c mkdir $TARGET
-adb shell su -c mv /data/local/tmp/site/web/* $TARGET 

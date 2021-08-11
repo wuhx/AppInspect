@@ -4,6 +4,8 @@ set -e
 
 export GRPC_TOKEN="com.cloudmonad.inspect"
 
+flutter build web
+
 ./gen_proto.sh
 pushd libfastlane/
 ./build-release.sh

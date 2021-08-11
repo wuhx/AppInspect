@@ -20,6 +20,9 @@ crate-type = ["cdylib", "rlib"]
 
 [build-dependencies]
 tonic-build = { version = "0.5", features = ["prost", "compression"] }
+walkdir = "2.3"
+zip = "0.5"
+anyhow = "1.0"
 
 [dev-dependencies]
 log-rs = { git = "ssh://git@github.com/wuhx/log-rs.git", branch = "main" }

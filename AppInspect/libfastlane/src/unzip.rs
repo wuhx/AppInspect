@@ -49,10 +49,10 @@ where
     Result::Ok(())
 }
 
-fn zip(src_dir: &str, dst_file: &str) -> zip::result::ZipResult<()> {
+pub fn zip(src_dir: &str, dst_file: &str) -> anyhow::Result<()> {
     let method = zip::CompressionMethod::Bzip2;
     if !Path::new(src_dir).is_dir() {
-        return Err(ZipError::FileNotFound);
+        anyhow::bail!("{} not exists!", src_dir);
     }
 
     let path = Path::new(dst_file);
@@ -66,36 +66,42 @@ fn zip(src_dir: &str, dst_file: &str) -> zip::result::ZipResult<()> {
     Ok(())
 }
 
-fn extract(zip_file: &str) -> i32 {
+pub fn extract_file(zip_file: &str, output_dir: &str) -> anyhow::Result<()> {
     let fname = std::path::Path::new(zip_file);
-    let file = std::fs::File::open(&fname).unwrap();
+    let file = std::fs::File::open(&fname)?;
+    extract(file, output_dir)?;
+    Ok(())
+}
 
-    let mut archive = zip::ZipArchive::new(file).unwrap();
+pub fn extract<R: Read + io::Seek>(file: R, output_dir: &str) -> anyhow::Result<()> {
+    let output_path = std::path::Path::new(output_dir);
+
+    let mut archive = zip::ZipArchive::new(file)?;
 
     for i in 0..archive.len() {
-        let mut file = archive.by_index(i).unwrap();
+        let mut file = archive.by_index(i)?;
         let outpath = match file.enclosed_name() {
-            Some(path) => path.to_owned(),
+            Some(path) => output_path.join(path.to_owned()),
             None => continue,
         };
 
         {
             let comment = file.comment();
             if !comment.is_empty() {
-                println!("File {} comment: {}", i, comment);
+                // println!("File {} comment: {}", i, comment);
             }
         }
 
         if (&*file.name()).ends_with('/') {
-            println!("File {} extracted to \"{}\"", i, outpath.display());
-            fs::create_dir_all(&outpath).unwrap();
+            // println!("File {} extracted to \"{}\"", i, outpath.display());
+            fs::create_dir_all(&outpath)?;
         } else {
-            println!(
-                "File {} extracted to \"{}\" ({} bytes)",
-                i,
-                outpath.display(),
-                file.size()
-            );
+            // println!(
+            //     "File {} extracted to \"{}\" ({} bytes)",
+            //     i,
+            //     outpath.display(),
+            //     file.size()
+            // );
             if let Some(p) = outpath.parent() {
                 if !p.exists() {
                     fs::create_dir_all(&p).unwrap();
@@ -115,15 +121,19 @@ fn extract(zip_file: &str) -> i32 {
             }
         }
     }
-    return 0;
+    Ok(())
 }
 
 #[test]
 fn test_zip() {
-    let src_dir = "src";
+    let src_dir = "site";
     let dst_zip = "site.zip";
-    let res = zip(src_dir, dst_zip);
-    log::debug!("zip res: {:?}", res);
+    // let res = zip(src_dir, dst_zip);
+    // log::debug!("zip res: {:?}", res);
+
+    let res = extract_file(dst_zip, "site_ext");
+    log::debug!("unzip res: {:?}", res);
+
     // std::fs::remove_file(dst_zip).unwrap();
     // let _ = doit(src_dir, dst_zip, zip::CompressionMethod::Bzip2);
     // panic!("compress use {:?} ", start.elapsed());
