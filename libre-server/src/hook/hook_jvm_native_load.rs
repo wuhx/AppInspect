@@ -6,11 +6,12 @@ pub struct HooKJvmNativeLoaderListener {
     so_path_loaded: Option<String>,
 }
 
-impl Drop for HooKJvmNativeLoaderListener {
-    fn drop(&mut self) {
-        log::debug!("HooKJvmNativeLoaderListener Drop");
-    }
-}
+// impl Drop for HooKJvmNativeLoaderListener {
+//     fn drop(&mut self) {
+//         log::debug!("HooKJvmNativeLoaderListener Drop");
+//     }
+// }
+
 impl HooKJvmNativeLoaderListener {
     pub fn do_hook() -> anyhow::Result<()> {
         let mut interceptor = Interceptor::obtain(&GUM);
@@ -65,7 +66,7 @@ impl InvocationListener for HooKJvmNativeLoaderListener {
             std::mem::transmute(data)
         };
         if let Some(path) = hook_info.so_path_loaded.take() {
-            log::debug!("HooKJvmNativeLoaderListener load {}", path);
+            log::debug!("load {}", path);
             // for hook in get_hook_list() {
             //     log::debug!("hook: {:?}", hook);
             // }

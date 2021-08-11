@@ -11,16 +11,16 @@ mod grpc;
 pub use grpc::*;
 
 use android_logger::{Config, FilterBuilder};
+use frida_gum::Gum;
 use jni::objects::JObject;
 use jni::sys::jint;
 use jni::{JNIEnv, JavaVM};
 use log::Level;
-use frida_gum::Gum;
 use once_cell::sync::{Lazy, OnceCell};
 use std::ffi::c_void;
 use std::os::raw::c_char;
-use util_rs::ffi::FromCString;
 use std::path::Path;
+use util_rs::ffi::FromCString;
 
 static GUM: Lazy<Gum> = Lazy::new(|| unsafe { Gum::obtain() });
 pub static G_PACKAGE_NAME: OnceCell<String> = OnceCell::new();
@@ -52,7 +52,7 @@ pub unsafe extern "C" fn JNI_OnLoad(vm: JavaVM, _reserved: *mut c_void) -> jint 
     android_logger::init_once(
         Config::default()
             .with_min_level(Level::Debug) // limit log level
-            .with_tag("LIBRE-SERVER")
+            .with_tag("Riru-AppInspect-SRV")
             .with_filter(
                 FilterBuilder::new()
                     // .parse("debug,lwip_rs::NetIf=trace,bandwidth_rs=error,redq_rs=error,lwip_rs=trace,h2=error")
@@ -63,12 +63,12 @@ pub unsafe extern "C" fn JNI_OnLoad(vm: JavaVM, _reserved: *mut c_void) -> jint 
     log_panics::init(); // log panics rather than printing them
 
     if _reserved.is_null() {
-        log::debug!("JNI_OnLoad 1.4, uid: {:?}", libc::getuid());
+        log::debug!("JNI_OnLoad 1.5, uid: {:?}", libc::getuid());
     } else {
         let pkg_name = String::from_c_string(_reserved as *const u8);
 
         log::debug!(
-            "JNI_OnLoad 1.4, pkg_name: {}, uid: {:?}",
+            "JNI_OnLoad 1.5, pkg_name: {}, uid: {:?}",
             &pkg_name,
             libc::getuid()
         );
@@ -86,8 +86,9 @@ pub unsafe extern "C" fn JNI_OnLoad(vm: JavaVM, _reserved: *mut c_void) -> jint 
     // let show_admin_ui = false;
     start_admin_ui();
     // load_test_hooks();
-    let res = load_hook();
-    log::debug!("load_hook: {:?}", res);
+    if let Err(err) = load_hook() {
+        log::error!("load_hook: {:?}", err);
+    };
     if let Err(err) = do_hook_all() {
         log::error!("do_hook fail: {:?}", err);
     }
@@ -126,10 +127,9 @@ fn start_admin_ui() {
 }
 
 #[no_mangle]
-pub extern fn check_hook_enable(pkg_name: *const c_char) -> bool {
-
-    let pkg_name = unsafe { String::from_c_string(pkg_name)};
-    let path = format!("/data/data/{}/.parasite",pkg_name);
+pub extern "C" fn check_hook_enable(pkg_name: *const c_char) -> bool {
+    let pkg_name = unsafe { String::from_c_string(pkg_name) };
+    let path = format!("/data/data/{}/.parasite", pkg_name);
     let res = Path::new(&path).exists();
     // log::debug!("check_hook_enable: {} res {}",&path, res);
     res

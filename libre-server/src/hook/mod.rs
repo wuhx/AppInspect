@@ -3,8 +3,8 @@ mod hook_jvm_native_load;
 mod hook_type;
 pub use hook_function_info::*;
 
-use crate::android_manager_protocol as pb;
 use crate::cache;
+use crate::{android_manager_protocol as pb, get_pkg_name};
 pub use hook_jvm_native_load::*;
 pub use hook_type::*;
 
@@ -46,6 +46,7 @@ pub fn load_hook() -> anyhow::Result<i32> {
     let db = cache::PB_CACHE.lock().unwrap();
     let list = db.list()?;
     // log::debug!("load_hook  list len: {}", list.len());
+
     fn hook_convert(info: &pb::HookInfo) -> HookFunctionInfo {
         fn arg_convert(args: &Vec<pb::HookArg>) -> Vec<(u32, HookType)> {
             args.iter()
@@ -58,8 +59,10 @@ pub fn load_hook() -> anyhow::Result<i32> {
                 .collect()
         }
         let args = arg_convert(&info.args);
+        let pkg_name = get_pkg_name().unwrap_or("unknown".to_owned());
+
         HookFunctionInfo::new(
-            "pkg_name",
+            &pkg_name,
             Some(info.module_name.as_str()),
             info.symbol_name.as_str(),
             args,
@@ -86,8 +89,9 @@ pub fn do_hook_all() -> anyhow::Result<()> {
         }
     }
 
-    let res = HooKJvmNativeLoaderListener::do_hook();
-    log::debug!("HooKJvmNativeLoaderListener: {:?}", res);
+    if let Err(err) = HooKJvmNativeLoaderListener::do_hook() {
+        log::error!("intercept app so load fail: {:?}", err);
+    }
 
     Ok(())
 }

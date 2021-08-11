@@ -13,4 +13,4 @@ ls -lh $OUTPUT
 $ANDROID_NDK/toolchains/llvm/prebuilt/darwin-x86_64/aarch64-linux-android/bin/strip $OUTPUT
 
 echo cp $OUTPUT $TARGET
-echo cp $OUTPUT $TARGET
+cp $OUTPUT $TARGET

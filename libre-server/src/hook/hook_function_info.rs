@@ -70,11 +70,11 @@ impl HookFunctionInfo {
         Ok(())
     }
 }
-impl Drop for HookFunctionInfo {
-    fn drop(&mut self) {
-        log::debug!("HookInfo drop");
-    }
-}
+// impl Drop for HookFunctionInfo {
+//     fn drop(&mut self) {
+//         log::debug!("HookInfo drop");
+//     }
+// }
 
 impl InvocationListener for HookFunctionInfo {
     fn on_enter(&mut self, ctx: InvocationContext) {

@@ -1,0 +1,43 @@
+#refresh_rate: 5 seconds
+
+appenders:
+
+  stdout:
+    kind: console
+    encoder:
+      pattern: "{d(%H:%M:%S%.3f)} {h({l})} [{T}-{I}]  - {m}{n}"
+      #https://docs.rs/log4rs/1.0.0/log4rs/encode/pattern/index.html
+      #https://docs.rs/chrono/0.4.19/chrono/format/strftime/index.html#specifiers
+
+
+  file:
+    kind: file
+    path: "log/app.log"
+    encoder:
+      pattern: "{d(%Y-%m-%d %H:%M:%S)} - {m}{n}"
+
+root:
+  level: debug
+  appenders:
+    - stdout
+    - file
+
+loggers:
+  surf:
+    level: info
+
+  isahc:
+    level: info
+
+  hyper:
+    level: info
+
+  reqwest:
+    level: info
+
+  fast_socks5:
+    level: warn
+
+  rustls:
+    level: info
+
