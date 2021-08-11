@@ -9,4 +9,4 @@ set -e
 
 flutter run 
 
-lr com.cloudmonad.inspect.debug
+lr com.cloudmonad.inspect

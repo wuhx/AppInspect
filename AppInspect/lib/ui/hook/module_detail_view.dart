@@ -253,7 +253,7 @@ class _ModuleDetailView extends State<ModuleDetailView> {
   Future<String> _dumpMemRange(Int64 start, Int64 end, String name) async {
     var file = await UiState.dumpMemRange(start, end, name);
     var res2 = await UiState.runRootCmd(
-        "cp $file /data/data/com.cloudmonad.inspect.debug/site/dump");
+        "cp $file /data/data/com.cloudmonad.inspect/site/dump");
     log.info("dump to file $file");
     var url = _getDumpFileUrl(file);
     Download.download(url);

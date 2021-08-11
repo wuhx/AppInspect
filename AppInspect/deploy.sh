@@ -1,4 +1,4 @@
-TARGET=/data/data/com.cloudmonad.inspect.debug/site
+TARGET=/data/data/com.cloudmonad.inspect/site
 flutter build web
 adb push build/web /data/local/tmp/site
 

@@ -3,11 +3,9 @@ mod jni_channel;
 mod cache;
 mod grpc;
 mod static_server;
+mod unzip;
 
 pub use grpc::*;
-
-use android_logger::{Config, FilterBuilder};
-use log::Level;
 
 use jni::objects::JObject;
 use jni::sys::jint;
@@ -43,11 +41,11 @@ pub unsafe extern "C" fn JNI_OnLoad(vm: JavaVM, _reserved: *mut c_void) -> jint 
     //JNI_OnLoad比ctor先执行
     #[cfg(target_os = "android")]
     android_logger::init_once(
-        Config::default()
-            .with_min_level(Level::Debug) // limit log level
-            .with_tag("Ran")
+        android_logger::Config::default()
+            .with_min_level(log::Level::Debug) // limit log level
+            .with_tag("AppInspect")
             .with_filter(
-                FilterBuilder::new()
+                android_logger::FilterBuilder::new()
                     // .parse("debug,lwip_rs::NetIf=trace,bandwidth_rs=error,redq_rs=error,lwip_rs=trace,h2=error")
                     .parse("debug,libadb_rs=error,sled=error,lwip_rs::NetIf=error,bandwidth_rs=error,redq_rs=error,lwip_rs=error,h2=error,jni=error")
                     .build(),
@@ -56,8 +54,7 @@ pub unsafe extern "C" fn JNI_OnLoad(vm: JavaVM, _reserved: *mut c_void) -> jint 
     log_panics::init(); // log panics rather than printing them
 
     // log::debug!("JNI_OnLoad 1.2, javaVM: {:p}", &vm);
-    log::debug!("JNI_OnLoad 1.2, {:?}", get_pkg_name());
-    log::info!("Ran Ver:1.0.7");
+    log::info!("JNI_OnLoad 1.2, {:?}", get_pkg_name());
     start_static_server();
 
     // root_detect::list_dev();
@@ -87,7 +84,7 @@ pub unsafe extern "C" fn Java_com_cloudmonad_inspect_App_start(_env: JNIEnv, _: 
     //use localhost
     let res = GrpcServer::start_runtime("0.0.0.0:10010");
     // let res = GrpcServer::start_runtime("127.0.0.1:10010");
-    // let res = GrpcServer::start_runtime("/data/data/com.cloudmonad.inspect.debug/files/UNIX_SOCKET");
+    // let res = GrpcServer::start_runtime("/data/data/com.cloudmonad.inspect/files/UNIX_SOCKET");
     // Err(No such file or directory (os error 2))
     log::debug!("start server res: {:?}", res);
     0
@@ -107,7 +104,9 @@ fn start_static_server() {
             .build()
             .unwrap();
         rt.block_on(async {
-            static_server::run_server(10020).await;
+            if let Err(err) = static_server::run_server(10020).await {
+                log::error!("start static_server fail: {:?}", err);
+            }
         });
     });
 }

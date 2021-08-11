@@ -10,8 +10,8 @@ pushd libfastlane/
 popd
 
 VER=$1
-RELEASE_AAB=RELEASE/Ran-$VER.aab
-RELEASE_APK=RELEASE/Ran-$VER.apk
+RELEASE_AAB=RELEASE/AppInspect-$VER.aab
+RELEASE_APK=RELEASE/AppInspect-$VER.apk
 echo release ver: $VER, RELEASE_AAB:$RELEASE_AAB RELEASE_APK:$RELEASE_APK
 
 
@@ -25,11 +25,13 @@ PKG=com.cloudmonad.inspect
 
 rm $APK || true
 
-flutter build apk --obfuscate --split-debug-info=./symbols --target-platform android-arm64,android-arm
+#flutter build apk --obfuscate --split-debug-info=./symbols --target-platform android-arm64,android-arm
+flutter build apk --obfuscate --split-debug-info=./symbols --target-platform android-arm64
 ls -lh $APK
 #cp $APK RELEASE 
 
-flutter build appbundle --obfuscate --split-debug-info=./bundle-symbols --target-platform android-arm64,android-arm
+#flutter build appbundle --obfuscate --split-debug-info=./bundle-symbols --target-platform android-arm64,android-arm
+flutter build appbundle --obfuscate --split-debug-info=./bundle-symbols --target-platform android-arm64
 ls -lh $BUNDLE
 #cp $BUNDLE RELEASE/
 

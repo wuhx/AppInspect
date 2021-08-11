@@ -1,5 +1,4 @@
 use crate::app_manager_protocol::*;
-use crate::jni_channel::AndroidUtil;
 use app_manager_protocol::app_manager_server::AppManager;
 use tonic::{Request, Response, Status};
 

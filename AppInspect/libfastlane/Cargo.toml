@@ -18,6 +18,14 @@ split-debuginfo = "unpacked"
 [lib]
 crate-type = ["cdylib", "rlib"]
 
+[build-dependencies]
+tonic-build = { version = "0.5", features = ["prost", "compression"] }
+
+[dev-dependencies]
+log-rs = { git = "ssh://git@github.com/wuhx/log-rs.git", branch = "main" }
+
+
+
 [dependencies]
 jni = { version = "0.19", default-features = false }
 tokio = { version = "1", features = ["full"] }
@@ -61,10 +69,5 @@ sled = "0.34"
 async-stream = "0.3"
 warp = "0.3"
 #protobuf = "2.22"
-
-[build-dependencies]
-tonic-build = { version = "0.5", features = ["prost", "compression"] }
-
-[dev-dependencies]
-log-rs = { git = "ssh://git@github.com/wuhx/log-rs.git", branch = "main" }
-
+walkdir = "2.3"
+zip = "0.5"

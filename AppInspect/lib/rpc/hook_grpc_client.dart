@@ -21,7 +21,7 @@ class HookGrpcClient {
     }
   }
 
-  static String token = "com.cloudmonad.inspect.debug";
+  static String token = "com.cloudmonad.inspect";
   // static const token = String.fromEnvironment('GRPC_TOKEN');
 
   static final grpcClient = AndroidManagerClient(channel,

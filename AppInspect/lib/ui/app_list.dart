@@ -208,7 +208,7 @@ class _AppListView extends State<AppListView> {
           onPressed: () {
             //wuhx test
             // UiState.runRootCmd("touch /data/local/tmp/HELLEO").then((value) {
-            // var cmd = "am force-stop com.cloudmonad.inspect.debug";
+            // var cmd = "am force-stop com.cloudmonad.inspect";
             // UiState.runRootCmd(cmd).then((value) {
             //   log.info("resp: $value");
             // });

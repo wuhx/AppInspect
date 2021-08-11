@@ -1,10 +1,9 @@
 // use crate::app_manager_protocol as pb;
 use crate::app_manager_protocol::*;
 use crate::jni_channel::JniChannel; //for jni_tunnel
-// use libadb_rs::util::RunningApp;
-// use libadb_rs::{AdbClient, AdbConnection};
+                                    // use libadb_rs::util::RunningApp;
+                                    // use libadb_rs::{AdbClient, AdbConnection};
 use prost::Message;
-use std::time::Instant;
 
 #[derive(Debug, Default)]
 pub struct AndroidUtil {}

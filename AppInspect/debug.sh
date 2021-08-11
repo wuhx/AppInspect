@@ -1,5 +1,5 @@
 set -e
-export GRPC_TOKEN="com.cloudmonad.inspect.debug"
+export GRPC_TOKEN="com.cloudmonad.inspect"
 ./gen_proto.sh
 pushd libfastlane/
 #./build.sh
@@ -10,7 +10,7 @@ popd
 APK=./build/app/outputs/apk/debug/app-debug.apk
 #BUNDLE=./build/app/outputs/bundle/debug/app-release.aab
 PKG=com.cloudmonad.inspect
-APP_ID=com.cloudmonad.inspect.debug
+APP_ID=com.cloudmonad.inspect
 #flutter run
 #flutter run --release --no-sound-null-safety
 
