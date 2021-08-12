@@ -51,6 +51,10 @@ flutter:
     - family: NotoSansCJK
       fonts:
         - asset: fonts/NotoSansCJKsc-Regular.otf
+    - family: Roboto
+      fonts:
+        - asset: fonts/roboto.ttf
+
   uses-material-design: true
   assets:
     - assets/

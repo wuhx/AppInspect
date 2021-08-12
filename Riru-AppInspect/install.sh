@@ -17,9 +17,9 @@ OUT=$(basename $(ls out/*.zip))
 adb push out/$OUT /data/local/tmp
 adb shell su -c magisk --install-module /data/local/tmp/$OUT
 
-#adb reboot
+adb reboot
 
-#adb wait-for-device
+adb wait-for-device
 
-#adb shell logcat|grep Riru
+adb shell logcat|grep Riru
 

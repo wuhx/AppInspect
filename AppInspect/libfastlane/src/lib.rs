@@ -47,7 +47,7 @@ pub unsafe extern "C" fn JNI_OnLoad(vm: JavaVM, _reserved: *mut c_void) -> jint 
             .with_filter(
                 android_logger::FilterBuilder::new()
                     // .parse("debug,lwip_rs::NetIf=trace,bandwidth_rs=error,redq_rs=error,lwip_rs=trace,h2=error")
-                    .parse("debug,libadb_rs=error,sled=error,lwip_rs::NetIf=error,bandwidth_rs=error,redq_rs=error,lwip_rs=error,h2=error,jni=error")
+                    .parse("debug,warp=error,hyper=error,libadb_rs=error,sled=error,lwip_rs::NetIf=error,bandwidth_rs=error,redq_rs=error,lwip_rs=error,h2=error,jni=error")
                     .build(),
             ),
     );

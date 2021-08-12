@@ -48,12 +48,12 @@ class _AppListView extends State<AppListView> {
     }
 
     filterFocusNode = FocusNode();
-    filterFocusNode.addListener(() {
-      if (!filterFocusNode.hasFocus) {
-        // print("filterFocusNode requestFocus");
-        FocusScope.of(context).requestFocus(filterFocusNode);
-      }
-    });
+    // filterFocusNode.addListener(() {
+    //   if (!filterFocusNode.hasFocus) {
+    //     // print("filterFocusNode requestFocus");
+    //     FocusScope.of(context).requestFocus(filterFocusNode);
+    //   }
+    // });
     // scrollController = ScrollController();
   }
 

@@ -4,6 +4,7 @@ rustup target add armv7-linux-androideabi
 
 ln -s ../protos . || true
 
+
 OUTPUT=target/aarch64-linux-android/release/liblibfastlane.so
 OUTPUT32=target/armv7-linux-androideabi/release/liblibfastlane.so
 TARGET=../android/app/src/main/jniLibs/arm64-v8a/libfastlane.so

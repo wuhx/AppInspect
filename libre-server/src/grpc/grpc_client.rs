@@ -112,9 +112,9 @@ async fn send(endpoint: String, new_pkg_name: String) -> anyhow::Result<()> {
 
     let request = tonic::Request::new(HookServerExitReq { new_pkg_name });
 
-    let response = client.hook_server_exit(request).await;
-
-    println!("RESPONSE={:?}", response);
+    if let Err(err) = client.hook_server_exit(request).await {
+        log::error!("Shutdown previous instance fail, Err {:?}", err);
+    }
 
     Ok(())
 }
