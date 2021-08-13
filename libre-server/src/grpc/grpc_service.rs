@@ -10,6 +10,7 @@ use crate::cache::{Key, PB_CACHE};
 use crate::{get_pkg_name, G_STOP_SENDER};
 // use anyhow::Error;
 // use std::borrow::Borrow;
+use anyhow::Context;
 use std::io::Write;
 // use std::ops::Deref;
 // use tokio::runtime::Runtime;
@@ -25,15 +26,16 @@ pub mod android_manager_protocol {
 fn dump_mem(start: usize, end: usize, name: &str) -> anyhow::Result<String> {
     let pkg_name = get_pkg_name().unwrap();
     let filename = format!(
-        "/data/data/{}/files/dump_{}-{}.{}",
+        "/data/data/{}/dump_{:?}-{:?}.{}",
         pkg_name, start, end, name
     );
-    log::debug!("dump mem {}", filename);
+
+    log::debug!("dump mem to:{} ", &filename);
 
     let ptr = start as *mut u8;
     let size = end - start;
     let mem = unsafe { std::slice::from_raw_parts_mut(ptr, size) };
-    let mut file = std::fs::File::create(&filename).expect("fail to create file");
+    let mut file = std::fs::File::create(&filename)?;
     file.write_all(mem)?;
     Ok(filename)
 }
@@ -47,30 +49,63 @@ impl AndroidManager for AndroidManagerImpl {
         &self,
         _request: tonic::Request<HookListModulesReq>,
     ) -> Result<tonic::Response<HookListModulesResp>, tonic::Status> {
-        let mds = frida_gum::enumerate_modules();
-        log::debug!("find Modules {}", mds.len());
-
-        // let sqlite3_open = frida_gum::Module::find_export_by_name(None, "sqlite3_open");
-        // log::debug!("1 sqlite3_open: {:?}", sqlite3_open);
-        // let sqlite3_open =
-        //     frida_gum::Module::find_export_by_name(Some("libwcdb.so"), "sqlite3_open");
-        // log::debug!("2 sqlite3_open: {:?}", sqlite3_open);
-
         let mut modules = Vec::new();
-        for info in mds {
-            // log::debug!("Module: {:?}", info.name);
-            // if info.name == "libart.so" {
-            // dump_mem(info.base_addr, info.size, info.name.as_str());
-            // }
 
-            let module = ModuleInfo {
-                name: info.name,
-                path: info.path,
-                base_addr: info.base_addr as u64,
-                size: info.size as u64,
-            };
-            modules.push(module);
+        fn get_module_name(pathname: Option<String>) -> anyhow::Result<String> {
+            let pathname = pathname.context("pathname empty")?;
+            if pathname.trim().starts_with("/dev") {
+                anyhow::bail!("/dev");
+            }
+            if pathname.trim().contains("(deleted)") {
+                anyhow::bail!("deleted");
+            }
+            if pathname.trim().starts_with("[") {
+                anyhow::bail!("anon memory");
+            }
+            let res = pathname.split("/").last().context("last empty")?;
+            Ok(res.to_owned())
         }
+
+        match crate::hook::proc_map::get_process_maps_self() {
+            Ok(result) => {
+                for info in result {
+                    if !info.is_exec() {
+                        //TODO skip
+                        continue;
+                    }
+                    // log::debug!("MapRange: {:?}", info);
+                    let module_name = get_module_name(info.pathname.clone());
+                    if module_name.is_err() {
+                        continue;
+                    };
+                    let module = ModuleInfo {
+                        name: module_name.unwrap(),
+                        path: info.pathname.unwrap(),
+                        base_addr: info.range_start as u64,
+                        size: (info.range_end - info.range_start) as u64,
+                    };
+                    modules.push(module);
+                }
+            }
+            Err(err) => {
+                log::error!("parse proc map fail: {:?}", err);
+            }
+        }
+
+        //frida module的地址包括map中显示的3列，而不是第一例，导致部分内存不可读
+        // let mds = frida_gum::enumerate_modules();
+        // log::debug!("find Modules {}", mds.len());
+        //
+        // let mut modules = Vec::new();
+        // for info in mds {
+        //     let module = ModuleInfo {
+        //         name: info.name,
+        //         path: info.path,
+        //         base_addr: info.base_addr as u64,
+        //         size: info.size as u64,
+        //     };
+        //     modules.push(module);
+        // }
 
         let resp = HookListModulesResp { modules };
         Ok(Response::new(resp))
@@ -174,7 +209,7 @@ impl AndroidManager for AndroidManagerImpl {
         &self,
         request: tonic::Request<HookDumpMemRangeReq>,
     ) -> Result<tonic::Response<HookDumpMemRangeResp>, tonic::Status> {
-        log::debug!("hook_dump_mem_range: {:?}", request);
+        // log::debug!("hook_dump_mem_range: {:?}", request);
         let req = request.into_inner();
 
         match dump_mem(req.start as usize, req.end as usize, &req.name) {

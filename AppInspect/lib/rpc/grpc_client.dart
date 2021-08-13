@@ -1,13 +1,8 @@
-import 'dart:async';
-
 import 'package:Ran/generated/app_manager.pbgrpc.dart';
 import 'package:Ran/grpc/grpc_stub.dart';
-import 'package:Ran/storage/state.dart';
-import 'package:fixnum/fixnum.dart';
 import 'package:grpc/grpc.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:grpc/grpc_connection_interface.dart';
-// import 'package:grpc/grpc_web.dart' as grpc_web;
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 
@@ -17,11 +12,10 @@ class GrpcClient {
 
   static String getEndpoint() {
     if (kIsWeb) {
-      // print("is web");
-      return 'http://192.168.0.106:10010';
+      // print("is web: ${Uri.base}");
+      return 'http://${Uri.base.host}:10010';
     } else {
       // print("is native");
-      // return 'tcp://192.168.0.106:10010';
       return 'tcp://127.0.0.1:10010';
     }
   }

@@ -6,6 +6,8 @@ OUTPUT=target/armv7-linux-androideabi/release/liblibre_server.so
 
 TARGET=../Riru-AppInspect/template/magisk_module/system/lib/libre_server.so
 
+export BUILD_TIME=$(date)
+
 rm $OUTPUT || echo rm fail
 
 cargo build --target armv7-linux-androideabi --release

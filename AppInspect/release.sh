@@ -33,11 +33,11 @@ ls -lh $APK
 #cp $APK RELEASE 
 
 #flutter build appbundle --obfuscate --split-debug-info=./bundle-symbols --target-platform android-arm64,android-arm
-flutter build appbundle --obfuscate --split-debug-info=./bundle-symbols --target-platform android-arm64
-ls -lh $BUNDLE
+#flutter build appbundle --obfuscate --split-debug-info=./bundle-symbols --target-platform android-arm64
+#ls -lh $BUNDLE
 #cp $BUNDLE RELEASE/
 
-cp $BUNDLE $RELEASE_AAB
+#cp $BUNDLE $RELEASE_AAB
 cp $APK $RELEASE_APK
 
 

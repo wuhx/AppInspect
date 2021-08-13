@@ -10,5 +10,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let gen_file = format!("{}/android_manager.rs", out_dir);
     std::fs::copy(gen_file, "src/grpc/android_manager.rs")?;
 
+    // std::env::set_var(
+    //     "BUILD_TIME",
+    //     chrono::Local::now().format("%a %b %e %T %Y").to_string(),
+    // );
+
     Ok(())
 }

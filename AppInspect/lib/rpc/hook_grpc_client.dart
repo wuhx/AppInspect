@@ -14,10 +14,10 @@ class HookGrpcClient {
   static String getEndpoint() {
     if (kIsWeb) {
       // print("is web");
-      return 'http://192.168.0.106:10015';
+      return 'http://${Uri.base.host}:10015';
     } else {
       // print("is native");
-      return 'tcp://192.168.0.106:10015';
+      return 'tcp://127.0.0.1:10015';
     }
   }
 

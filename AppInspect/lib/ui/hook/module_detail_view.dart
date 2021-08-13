@@ -132,13 +132,14 @@ class _ModuleDetailView extends State<ModuleDetailView> {
                           return null;
                         },
                         onChanged: (value) {
-                          print("onChanged:  $value");
-                          if (value.toLowerCase().startsWith("0x")) {
-                            mStart = Int64.parseHex(value.substring(2));
-                          } else {
-                            mStart = Int64.parseHex(value);
-                          }
-                          print("onChanged: start $mStart");
+                          mStart = _parseAddr(value);
+                          print("onChanged:  $value parse to $mStart");
+                          // if (value.toLowerCase().startsWith("0x")) {
+                          //   mStart = Int64.parseHex(value.substring(2));
+                          // } else {
+                          //   mStart = Int64.parseHex(value);
+                          // }
+                          // print("onChanged: start $mStart");
                         },
                       ),
                       TextFormField(
@@ -149,13 +150,10 @@ class _ModuleDetailView extends State<ModuleDetailView> {
                           labelText: 'End Addr',
                         ),
                         onChanged: (value) {
-                          print("onChanged:  $value");
-                          if (value.toLowerCase().startsWith("0x")) {
-                            mEnd = Int64.parseHex(value.substring(2));
-                          } else {
-                            mEnd = Int64.parseHex(value);
-                          }
-                          print("onChanged: end $mEnd");
+                          mEnd = _parseAddr(value);
+                          print("onChanged:  $value parse to $mEnd");
+
+                          // print("onChanged: end $mEnd");
 
                           // setState(() {});
                         },
@@ -251,12 +249,23 @@ class _ModuleDetailView extends State<ModuleDetailView> {
   }
 
   Future<String> _dumpMemRange(Int64 start, Int64 end, String name) async {
-    var file = await UiState.dumpMemRange(start, end, name);
-    var res2 = await UiState.runRootCmd(
-        "cp $file /data/data/com.cloudmonad.inspect/site/dump");
-    log.info("dump to file $file");
-    var url = _getDumpFileUrl(file);
-    Download.download(url);
+    var file = "not init";
+    try {
+      file = await UiState.dumpMemRange(start, end, name);
+      var res2 = await UiState.runRootCmd(
+          "mv $file /data/data/com.cloudmonad.inspect/site/dump");
+      var res3 = await UiState.runRootCmd(
+          "chmod a+r /data/data/com.cloudmonad.inspect/site/dump -R");
+      var res4 = await UiState.runRootCmd(
+          "chcon u:object_r:app_data_file:s0 /data/data/com.cloudmonad.inspect/site/dump -R");
+      log.info("dump to file $file");
+      var url = _getDumpFileUrl(file);
+      Download.download(url);
+    } catch (err) {
+      log.severe('dumpMemRange error: $err');
+      file = "dumpMemRange fail ${err.toString()}";
+    }
+
     return file;
   }
 }

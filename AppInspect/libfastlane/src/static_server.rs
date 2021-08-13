@@ -22,6 +22,10 @@ pub async fn run_server(port: u16) -> anyhow::Result<()> {
     let site_root = format!("/data/data/{}/site", pkg_name);
     if !Path::new(&site_root).exists() {
         extract_site(&site_root);
+        let dump_dir = format!("{}/dump", &site_root);
+        if let Err(err) = std::fs::create_dir(&dump_dir) {
+            log::error!("fail to create dir: {}", &dump_dir);
+        }
     }
     let addr: SocketAddr = format!("{}:{}", "0.0.0.0", port).parse()?;
     log::debug!(

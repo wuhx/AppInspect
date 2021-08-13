@@ -61,12 +61,14 @@ impl GrpcServer {
                 // .allow_origins(vec!["127.0.0.1"])
                 .enable(server);
 
-            let _res = Server::builder()
+            if let Err(err) = Server::builder()
                 .accept_http1(true)
                 .add_service(service)
                 .serve(addr)
                 .await
-                .expect("server builder fail!");
+            {
+                log::error!("fail to start server: {:?}", err);
+            }
         });
 
         // if bind_addr.contains(":") {

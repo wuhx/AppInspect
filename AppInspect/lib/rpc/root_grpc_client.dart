@@ -11,11 +11,10 @@ class RootGrpcClient {
 
   static String getEndpoint() {
     if (kIsWeb) {
-      // print("is web");
-      return 'http://192.168.0.106:65535';
+      return 'http://${Uri.base.host}:65535';
     } else {
       // print("is native");
-      return 'tcp://192.168.0.106:65535';
+      return 'tcp://127.0.0.1:65535';
     }
   }
 

@@ -1,9 +1,11 @@
 mod hook_function_info;
 mod hook_jvm_native_load;
 mod hook_type;
+pub mod proc_map;
+
 pub use hook_function_info::*;
 
-use crate::{android_manager_protocol as pb, get_pkg_name};
+use crate::android_manager_protocol as pb;
 use crate::{cache, G_PACKAGE_NAME};
 pub use hook_jvm_native_load::*;
 pub use hook_type::*;
@@ -60,7 +62,7 @@ pub fn load_hook() -> anyhow::Result<i32> {
         }
         let args = arg_convert(&info.args);
         // let pkg_name = get_pkg_name().unwrap_or("unknown".to_owned());
-        let default = "uninit".to_owned();
+        // let default = "uninit".to_owned();
         let pkg_name = G_PACKAGE_NAME.get().unwrap();
 
         HookFunctionInfo::new(

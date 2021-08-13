@@ -56,21 +56,28 @@ pub unsafe extern "C" fn JNI_OnLoad(vm: JavaVM, _reserved: *mut c_void) -> jint 
             .with_filter(
                 FilterBuilder::new()
                     // .parse("debug,lwip_rs::NetIf=trace,bandwidth_rs=error,redq_rs=error,lwip_rs=trace,h2=error")
-                    .parse("debug,libadb_rs=error,sled=error,lwip_rs::NetIf=error,bandwidth_rs=error,redq_rs=error,lwip_rs=error,h2=error,jni=error")
+                    .parse("debug,hyper=error,libadb_rs=error,sled=error,lwip_rs::NetIf=error,bandwidth_rs=error,redq_rs=error,lwip_rs=error,h2=error,jni=error")
                     .build(),
             ),
     );
     log_panics::init(); // log panics rather than printing them
 
+    let build_time = std::env!("BUILD_TIME");
+
     if _reserved.is_null() {
-        log::debug!("JNI_OnLoad 1.5, uid: {:?}", libc::getuid());
+        log::debug!(
+            "JNI_OnLoad 1.5, uid: {:?}, build: {}",
+            libc::getuid(),
+            build_time
+        );
     } else {
         let pkg_name = String::from_c_string(_reserved as *const u8);
 
         log::debug!(
-            "JNI_OnLoad 1.5, pkg_name: {}, uid: {:?}",
+            "JNI_OnLoad 1.5, pkg_name: {}, uid: {:?}, build:{}",
             &pkg_name,
-            libc::getuid()
+            libc::getuid(),
+            build_time
         );
 
         let _ = G_PACKAGE_NAME.set(pkg_name);

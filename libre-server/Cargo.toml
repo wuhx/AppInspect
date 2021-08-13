@@ -20,6 +20,7 @@ crate-type = ["cdylib", "rlib","staticlib"]
 
 [build-dependencies]
 tonic-build = { version = "0.5", features = ["prost", "compression"] }
+chrono = "0.4"
 
 [dev-dependencies]
 log-rs = { git = "ssh://git@github.com/wuhx/log-rs.git", branch = "main" }
@@ -60,7 +61,6 @@ tonic-web = "0.1"
 #tracing-subscriber = "0.2"
 bytes = "1.0"
 #rusqlite = { version = "0.25", features = ["bundled","chrono"] }
-chrono = "0.4"
 tokio-stream = "0.1"
 rand = "0.8"
 sled = "0.34"

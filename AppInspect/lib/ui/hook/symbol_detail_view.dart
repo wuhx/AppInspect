@@ -62,7 +62,7 @@ class _SymbolDetailView extends State<SymbolDetailView> {
         info.symbolName,
         style: style,
       ),
-      subtitle: Text("0x${info.address.toHexString()}+${info.size}"),
+      subtitle: Text("0x${info.address.toHexString()}"),
       onTap: () {
         Navigator.push(
           context,

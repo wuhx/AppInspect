@@ -117,7 +117,7 @@ class UiState {
   }
 
   static Future<String> runRootCmd(String cmd) {
-    log.info("runRootCmd: $cmd");
+    // log.info("runRootCmd: $cmd");
     var req = RunRootCmdReq.create();
     req.cmd = cmd;
     var resp = RootGrpcClient.grpcClient.runRootCmd(req);
