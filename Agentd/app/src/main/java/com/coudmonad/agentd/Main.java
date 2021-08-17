@@ -20,8 +20,8 @@ public class Main {
         }
     }
 
-    public static void load_so(String so_path) {
-        Log.d(TAG, "Agentd start loaded: " + so_path);
+    public static void load_so() {
+        String so_path = "/system/lib64/libjsu.so";
 
         mThread = new Thread(new Runnable() {
             @Override
@@ -31,8 +31,8 @@ public class Main {
                 while(!nodelay) {
                     sleep(1000);
                     boolean filesMounted = new File(so_path).exists();
-                    Log.d(TAG, "Agentd Thread: filesMounted: " + filesMounted);
                     if (filesMounted) {
+                        Log.d(TAG, "Agentd Thread: filesMounted!");
                         sleep(3000);
                         break;
                     }
@@ -40,8 +40,8 @@ public class Main {
 
 //                System.loadLibrary("re_server");
 //                System.load("/data/local/tmp/libre_server.so");
-                System.load("/data/local/tmp/libjsu.so");
-                Log.d(TAG, "Agentd start loaded!: " + so_path);
+                System.loadLibrary("jsu");
+//                Log.d(TAG, "Agentd start loaded!: " + so_path);
 //                System.load(so_path);
 
             }
@@ -55,7 +55,7 @@ public class Main {
     public static void main(String[] args) {
         log("hello test");
 
-        load_so("/data/local/tmp/libjsu.so");
+        load_so();
 //        UdsServer uds = new UdsServer();
 //        uds.start();
 

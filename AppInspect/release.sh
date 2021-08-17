@@ -27,8 +27,8 @@ PKG=com.cloudmonad.inspect
 
 rm $APK || true
 
-#flutter build apk --obfuscate --split-debug-info=./symbols --target-platform android-arm64,android-arm
-flutter build apk --obfuscate --split-debug-info=./symbols --target-platform android-arm64
+flutter build apk --obfuscate --split-debug-info=./symbols --target-platform android-arm64,android-arm
+#flutter build apk --obfuscate --split-debug-info=./symbols --target-platform android-arm64
 ls -lh $APK
 #cp $APK RELEASE 
 

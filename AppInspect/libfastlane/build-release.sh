@@ -1,3 +1,5 @@
+set -e
+
 export STATIC_SITE=../build/web
 rustup target add aarch64-linux-android
 rustup target add armv7-linux-androideabi
@@ -9,7 +11,10 @@ OUTPUT=target/aarch64-linux-android/release/liblibfastlane.so
 OUTPUT32=target/armv7-linux-androideabi/release/liblibfastlane.so
 TARGET=../android/app/src/main/jniLibs/arm64-v8a/libfastlane.so
 TARGET32=../android/app/src/main/jniLibs/armeabi-v7a/libfastlane.so
+
 rm $OUTPUT
+rm $OUTPUT32
+
 rm $TARGET
 mkdir -p $(dirname $TARGET)
 mkdir -p $(dirname $TARGET32)
@@ -26,6 +31,7 @@ cargo build --target armv7-linux-androideabi --release
 
 ls -lh $OUTPUT
 $ANDROID_NDK/toolchains/llvm/prebuilt/darwin-x86_64/aarch64-linux-android/bin/strip $OUTPUT
+$ANDROID_NDK/toolchains/llvm/prebuilt/darwin-x86_64/aarch64-linux-android/bin/strip $OUTPUT32
 ls -lh $OUTPUT
 
 cp $OUTPUT $TARGET
