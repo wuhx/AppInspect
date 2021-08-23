@@ -20,3 +20,13 @@ adb reboot
 adb install AppInspect-0.0.1.apk  
 adb shell am start -n com.cloudmonad.inspect/.MainActivity
 ```
+
+
+
+
+### More Info
+
+[[原创]AppInspect : 一个纯手机端实现的无代码的hook框架](https://bbs.pediy.com/thread-269004-1.htm)
+
+[从Frida源码学习ArtHook](https://github.com/wuhx/AppInspect/wiki)
+
