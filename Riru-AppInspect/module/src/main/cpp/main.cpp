@@ -64,7 +64,7 @@ static void forkAndSpecializePre(
 static void dlopen_so(const char *so_name)
 {
     auto handle = dlopen(so_name, RTLD_NOW);
-    // LOGD("[%s] dlopen %s result! %p", pkg_name, so_name, handle);
+    LOGD("[%s] dlopen %s result! %p", pkg_name, so_name, handle);
 
     if (handle)
     {
@@ -83,10 +83,12 @@ void try_hook(JNIEnv *env) {
 
     bool is_hook = check_hook_enable(pkg_name);
     if (is_hook ) {
-        LOGD("[%s] hook enabled!", pkg_name);
+        // LOGD("[%s] hook enabled!", pkg_name);
         // JNI_OnLoad(g_vm,pkg_name);
         // dlopen_so(get_server_so());
-        dlopen_so("libre_server.so");
+        // dlopen_so("libre_server.so");
+        LOGE("[%s] hook enabled!", pkg_name);
+        dlopen_so("/data/local/tmp/libre_server.so");
     }
 }
 

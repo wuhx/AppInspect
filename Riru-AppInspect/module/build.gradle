@@ -7,6 +7,8 @@ apply plugin: 'com.android.library'
 apply from: file(rootProject.file('module.gradle'))
 
 android {
+    ndkVersion "23.0.7599858"
+
     compileSdkVersion rootProject.ext.targetSdkVersion
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion

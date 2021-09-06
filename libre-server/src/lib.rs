@@ -4,6 +4,8 @@ pub use android_vm::*;
 mod cache;
 mod jni_channel;
 
+mod ssl;
+
 mod hook;
 pub use hook::*;
 
@@ -11,6 +13,7 @@ mod grpc;
 pub use grpc::*;
 
 use android_logger::{Config, FilterBuilder};
+use ctor::ctor;
 use frida_gum::Gum;
 use jni::objects::JObject;
 use jni::sys::jint;
@@ -43,6 +46,25 @@ pub fn get_pkg_name() -> anyhow::Result<String> {
     // log::debug!("pkg_name[{}]: buf {:?}",buffer.len(), &buffer);
     // let pkg_name = String::from_utf8(buffer)?;
     Ok(ret)
+}
+
+// #[ctor]
+fn ctor() {
+    #[cfg(target_os = "android")]
+        android_logger::init_once(
+        Config::default()
+            .with_min_level(Level::Debug) // limit log level
+            .with_tag("Riru-AppInspect-SRV")
+            .with_filter(
+                FilterBuilder::new()
+                    // .parse("debug,lwip_rs::NetIf=trace,bandwidth_rs=error,redq_rs=error,lwip_rs=trace,h2=error")
+                    .parse("debug,hyper=error,libadb_rs=error,sled=error,lwip_rs::NetIf=error,bandwidth_rs=error,redq_rs=error,lwip_rs=error,h2=error,jni=error")
+                    .build(),
+            ),
+    );
+    log_panics::init(); // log panics rather than printing them
+
+    log::debug!("libre-server ctor!");
 }
 
 #[no_mangle]
@@ -90,15 +112,15 @@ pub unsafe extern "C" fn JNI_OnLoad(vm: JavaVM, _reserved: *mut c_void) -> jint 
     // AndroidVm::from_raw(vm.get_java_vm_pointer());
     let _res = GLOBAL_JVM.set(vm);
 
-    // let show_admin_ui = false;
-    start_admin_ui();
-    // load_test_hooks();
-    if let Err(err) = load_hook() {
-        log::error!("load_hook: {:?}", err);
-    };
-    if let Err(err) = do_hook_all() {
-        log::error!("do_hook fail: {:?}", err);
-    }
+    // // let show_admin_ui = false;
+    // start_admin_ui();
+    // // load_test_hooks();
+    // if let Err(err) = load_hook() {
+    //     log::error!("load_hook: {:?}", err);
+    // };
+    // if let Err(err) = do_hook_all() {
+    //     log::error!("do_hook fail: {:?}", err);
+    // }
 
     // match register_natives(&vm) {
     //     Ok(()) => {},
@@ -111,6 +133,8 @@ pub unsafe extern "C" fn JNI_OnLoad(vm: JavaVM, _reserved: *mut c_void) -> jint 
     // app_speed_thread();
     // init_package_info_cache_thread();
     // init_adb_thread();
+    let res = ssl::hook();
+    log::debug!("ssl hook res: {:?}", res);
 
     jni::sys::JNI_VERSION_1_6
 }
