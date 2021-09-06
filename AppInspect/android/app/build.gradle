@@ -65,7 +65,6 @@ android {
             signingConfig signingConfigs.release
 
             minifyEnabled true
-            useProguard true
             debuggable false
             shrinkResources true
             zipAlignEnabled true
