@@ -18,7 +18,8 @@ class RootGrpcClient {
     }
   }
 
-  static const token = String.fromEnvironment('GRPC_TOKEN');
+  static String token = "com.cloudmonad.inspect.debug";
+  // static const token = String.fromEnvironment('GRPC_TOKEN');
 
   static final grpcClient = RootManagerClient(channel,
       options: CallOptions(metadata: {'authorization': 'Bearer $token'}));

@@ -8,8 +8,9 @@ use tonic::transport::Server;
 use tonic::{metadata::MetadataValue, Request, Status};
 
 static TOKEN: Lazy<String> = Lazy::new(|| {
-    let tk = get_pkg_name().expect("Fail to Unify");
-    tk
+    // let tk = get_pkg_name().expect("Fail to Unify");
+    // tk
+    "com.cloudmonad.inspect".to_owned()
 });
 
 #[derive(Debug)]

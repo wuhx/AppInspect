@@ -1,10 +1,11 @@
 set -e
-export GRPC_TOKEN="com.cloudmonad.inspect"
+export GRPC_TOKEN="com.cloudmonad.inspect.debug"
 ./gen_proto.sh
 pushd libfastlane/
-#./build.sh
-./build-release.sh
+./script/run.sh
 popd
+
+JAVA_VERSION=11
 
 
 APK=./build/app/outputs/apk/debug/app-debug.apk
