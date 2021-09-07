@@ -1,15 +1,34 @@
 package com.cloudmonad.inspect;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+
+import io.flutter.FlutterInjector;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.embedding.engine.FlutterEngineCache;
+import io.flutter.embedding.engine.FlutterEngineGroup;
 import io.flutter.embedding.engine.dart.DartExecutor;
 
 public class App extends Application {
 
-//    static FlutterEngineGroup engines;
-    public static FlutterEngine flutterEngine;
+    static FlutterEngineGroup engineGroup;
+    public static FlutterEngine engineMain;
+    public static FlutterEngine engineFloat;
     private static App sApplication;
+
+    static void log(String msg) {
+        android.util.Log.d("App", msg);
+    }
+
+    FlutterEngine createEngine(Context activity, String dartEntryName) {
+        DartExecutor.DartEntrypoint dartEntrypoint =
+                new DartExecutor.DartEntrypoint(
+                        FlutterInjector.instance().flutterLoader().findAppBundlePath(),
+                        dartEntryName
+                );
+        log("trace route: createEngine: "+dartEntrypoint.toString());
+        return engineGroup.createAndRunEngine(activity, dartEntrypoint);
+    }
 
     public static Application getApplication() {
         return sApplication;
@@ -21,11 +40,16 @@ public class App extends Application {
 
     native int start();
 
-    static void log(String msg) {
-        android.util.Log.d("App", msg);
-    }
+
 
     Thread mThread;
+
+
+    void startFloatService() {
+        Intent intent = new Intent(this, FloatService.class);
+        startService(intent);
+    }
+
 
 //    private static final Handler mHandler = new Handler();
 //
@@ -55,11 +79,13 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-//        engines = new FlutterEngineGroup(this);
+        engineGroup = new FlutterEngineGroup(this);
+        engineFloat = createEngine(this,"floatMain");
 //        sApplication = this;
 //        log("loadLibrary fastlane");
         System.loadLibrary("fastlane");
 
+        startFloatService();
         mThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -83,8 +109,20 @@ public class App extends Application {
 //        );
 
         // Cache the FlutterEngine to be used by FlutterActivity.
+        FlutterEngineCache
+                .getInstance()
+                .put("my_engine_id", engineFloat);
+
+//        engineMain = new FlutterEngine(this);
+//
+//        // Start executing Dart code to pre-warm the FlutterEngine.
+//        engineMain.getDartExecutor().executeDartEntrypoint(
+//                DartExecutor.DartEntrypoint.createDefault()
+//        );
+//
+//        // Cache the FlutterEngine to be used by FlutterActivity.
 //        FlutterEngineCache
 //                .getInstance()
-//                .put("my_engine_id", flutterEngine);
+//                .put("my_engine_id", engineMain);
     }
 }

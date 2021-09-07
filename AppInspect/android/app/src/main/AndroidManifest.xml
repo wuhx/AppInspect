@@ -2,59 +2,66 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.cloudmonad.inspect">
-    <uses-permission android:name="android.permission.INTERNET"/>
 
-<!--    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"/>-->
-
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE " />
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"/> -->
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
 
     <application
         android:name=".App"
-        android:icon="@mipmap/ic_launcher"
-        android:theme="@style/AppTheme"
-        android:extractNativeLibs="true"
         android:allowNativeHeapPointerTagging="false"
+        android:extractNativeLibs="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
 
-        android:label="@string/app_name">
+        <activity
+            android:name=".FloatActivity"
+            android:theme="@style/AppTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true" />
+
         <service
             android:name="com.defyun.vpn.ReVpnService"
             android:enabled="true"
-            android:permission="android.permission.BIND_VPN_SERVICE"
-            android:exported="true">
+            android:exported="true"
+            android:permission="android.permission.BIND_VPN_SERVICE">
             <intent-filter>
-                <action android:name="android.net.VpnService"/>
+                <action android:name="android.net.VpnService" />
             </intent-filter>
-            <meta-data android:name="android.net.VpnService.SUPPORTS_ALWAYS_ON"
-                android:value="true"/>
-        </service>
 
-<!--        <activity-->
-<!--            android:name="io.flutter.embedding.android.FlutterActivity"-->
-<!--            android:theme="@style/DialogTheme"-->
-<!--            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"-->
-<!--            android:hardwareAccelerated="true"-->
-<!--            android:launchMode="singleTask"-->
-<!--            android:excludeFromRecents="true"-->
-<!--            android:windowSoftInputMode="adjustResize"-->
-<!--            />-->
+            <meta-data
+                android:name="android.net.VpnService.SUPPORTS_ALWAYS_ON"
+                android:value="true" />
+        </service>
+        <service android:name=".FloatService" />
 
         <activity
+            android:name="io.flutter.embedding.android.FlutterActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:excludeFromRecents="true"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTask"
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name="com.defyun.vpn.VpnActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
-<!--        <activity-->
-<!--            android:name=".FwRequestDialog"-->
-<!--            android:theme="@style/DialogTheme"-->
-<!--            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"-->
-<!--            android:hardwareAccelerated="true"-->
-<!--            android:launchMode="standard"-->
-<!--            android:exported="true"-->
-<!--            android:excludeFromRecents="true"-->
-<!--            android:windowSoftInputMode="adjustResize"-->
-<!--            />-->
-
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" /> <!-- <activity -->
+        <!-- android:name=".FwRequestDialog" -->
+        <!-- android:theme="@style/DialogTheme" -->
+        <!-- android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" -->
+        <!-- android:hardwareAccelerated="true" -->
+        <!-- android:launchMode="standard" -->
+        <!-- android:exported="true" -->
+        <!-- android:excludeFromRecents="true" -->
+        <!-- android:windowSoftInputMode="adjustResize" -->
+        <!-- /> -->
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

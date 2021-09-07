@@ -23,6 +23,8 @@
 
     </style>
 
+
+
     <style name="DialogTheme" parent="@style/LaunchTheme">
         <item name="android:windowIsTranslucent">true</item>
         <item name="windowActionBar">false</item>
